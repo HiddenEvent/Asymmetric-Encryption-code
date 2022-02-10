@@ -1,4 +1,4 @@
-<mxfile modified="2022-02-10T05:24:08.852Z" host="app.diagrams.net" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" etag="-C8ntoWcJJrDwGhkEwR6" version="16.5.5" type="github">
+<mxfile modified="2022-02-10T05:29:01.792Z" host="app.diagrams.net" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" etag="flXwVj0K6iVSO1CZmTMC" version="16.5.5" type="github">
   <diagram id="Ht1M8jgEwFfnCIfOTk4-" name="Page-1">
     <mxGraphModel dx="1237" dy="690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -34,11 +34,11 @@
         <mxCell id="Wol5SRi4eSvKa6IY_BeL-19" value="휴넷 Server" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;spacing=3;fontSize=16;fontFamily=Verdana;fontColor=#46495D;" vertex="1" parent="1">
           <mxGeometry x="785.9300000000001" y="451.7700000000001" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="Wol5SRi4eSvKa6IY_BeL-20" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;apiPublicKey.jks&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontColor=#46495D;strokeColor=#788AA3;fillColor=#CCCCFF;" vertex="1" parent="1">
-          <mxGeometry x="230.43" y="572" width="123.57" height="50" as="geometry" />
+        <mxCell id="Wol5SRi4eSvKa6IY_BeL-20" value="&lt;b style=&quot;font-size: 13px&quot;&gt;apiPublic.jks&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontColor=#46495D;strokeColor=#788AA3;fillColor=#CCCCFF;" vertex="1" parent="1">
+          <mxGeometry x="237.15" y="570" width="109.57" height="48" as="geometry" />
         </mxCell>
         <mxCell id="Wol5SRi4eSvKa6IY_BeL-21" value="암호화 데이터 생성&lt;br style=&quot;font-size: 11px;&quot;&gt;&lt;b style=&quot;font-size: 11px;&quot;&gt;(현재시간 &#39; / &#39;&amp;nbsp;&lt;/b&gt;&lt;b style=&quot;font-size: 11px;&quot;&gt;고객ID)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#46495D;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="226.87" y="622" width="120" height="30" as="geometry" />
+          <mxGeometry x="230.94" y="618" width="120" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Wol5SRi4eSvKa6IY_BeL-22" value="암호화 데이터 전송" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#46495D;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="100.94" y="345" width="120" height="20" as="geometry" />
@@ -49,11 +49,11 @@
             <mxPoint x="550" y="270" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Wol5SRi4eSvKa6IY_BeL-25" value="&lt;b style=&quot;font-size: 13px&quot;&gt;apiPrivateKey.jks&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontColor=#46495D;strokeColor=#788AA3;fillColor=#CCCCFF;" vertex="1" parent="1">
-          <mxGeometry x="790.4300000000001" y="352" width="123.57" height="50" as="geometry" />
+        <mxCell id="Wol5SRi4eSvKa6IY_BeL-25" value="&lt;b style=&quot;font-size: 13px&quot;&gt;apiPrivate.jks&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontColor=#46495D;strokeColor=#788AA3;fillColor=#CCCCFF;" vertex="1" parent="1">
+          <mxGeometry x="797.15" y="345" width="109.57" height="48" as="geometry" />
         </mxCell>
         <mxCell id="Wol5SRi4eSvKa6IY_BeL-26" value="복호화 및 로그인 처리&lt;br style=&quot;font-size: 11px&quot;&gt;&lt;b style=&quot;font-size: 11px&quot;&gt;(현재시간 &#39; / &#39;&amp;nbsp;&lt;/b&gt;&lt;b style=&quot;font-size: 11px&quot;&gt;고객ID)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#46495D;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="786.87" y="402" width="120" height="30" as="geometry" />
+          <mxGeometry x="790.87" y="402" width="120" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Wol5SRi4eSvKa6IY_BeL-27" value="로그인&amp;nbsp; Get방식 요청&lt;br&gt;(암호화 데이터 전송)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#46495D;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="540" y="228.23" width="130" height="30" as="geometry" />
