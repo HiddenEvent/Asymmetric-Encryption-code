@@ -1,43 +1,57 @@
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 
 public class KeyTest {
-    public static void main(String[] args) throws Exception {
-        run();
-    }
+    private static final String keyFilePath = System.getProperty("user.dir") + "/src/keys/";
+    private static Cipher cipher = null;
 
-    public static void run() {
+    static {
         try {
-            String text = "아이디 날아갑니다~~~~1313123213213123123121231313dfgfgtreg싷라ㅣ후구ㅑㅐ루하ㅣ구ㅐ호ㅜ릭사ㅜㅎ라ㅜㅑㄱ힐ㅇ후3";
-            Cipher cipher = Cipher.getInstance("RSA");
-
-            Key rsaPublicKeyFromStore = getPublicKey2();
-            Key rsaPrivateKeyFromStore = getPrivateKey2();
-
-
-            // encrypt the text
-            cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKeyFromStore);
-            byte[] encrypted = cipher.doFinal(text.getBytes());
-            System.out.println("암호화된 텍스트 -> " + new String(encrypted));
-
-            // decrypt the text
-            cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKeyFromStore);
-            String decrypted = new String(cipher.doFinal(encrypted));
-            System.out.println("복호화된 텍스트 -> " + decrypted);
-
-        }catch(Exception e) {
+            cipher = Cipher.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }
 
+    public static void main(String[] args) throws Exception {
+        // 고객사에서 보낼 데이터
+        String text = "아이디";
+        String encryptHexString = encryption(text);
+
+        // 우리쪽 서버에서 복호화 로그인 처리
+        String decryption = decryption(encryptHexString);
+    }
+
+    private static String decryption(String encryptHexString) throws Exception {
+        Key rsaPrivateKeyFromStore = getPrivateKey();
+        cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKeyFromStore);
+
+        byte[] encryptBytes = hexStringToBytes(encryptHexString);
+        return new String(cipher.doFinal(encryptBytes));
+    }
+
+    private static String encryption(String text) throws Exception {
+        Key rsaPrivateKeyFromStore = getPublicKey();
+        cipher.init(Cipher.ENCRYPT_MODE, rsaPrivateKeyFromStore);
+
+        byte[] bytes = text.getBytes();
+        byte[] encryptByte = cipher.doFinal(bytes);
+        return toHexString(encryptByte);
+    }
+
     private static Key getPrivateKey() throws Exception {
-        String keystorePath = "c:/work/apiEncryptionKey.jks";
+        String keystorePath = keyFilePath + "apiPrivate.jks";
         String keystorePwd = "test1234";
-        String alias = "apiEncryptionKey";
+        String alias = "privateServer";
         String keyPwd = "test1234";
         FileInputStream is = new FileInputStream(keystorePath);
 //        키 저장소 유형: PKCS12
@@ -46,10 +60,11 @@ public class KeyTest {
         Key key = keystore.getKey(alias, keyPwd.toCharArray());
         return key;
     }
+
     private static Key getPublicKey() throws Exception {
-        String keystorePath = "c:/work/publicKey.jks";
+        String keystorePath = keyFilePath + "apiPublic.jks";
         String keystorePwd = "test1111";
-        String alias = "trustServer";
+        String alias = "publicServer";
         FileInputStream is = new FileInputStream(keystorePath);
 //        키 저장소 유형: PKCS12
         KeyStore keystore = KeyStore.getInstance("PKCS12");
@@ -57,36 +72,51 @@ public class KeyTest {
         Certificate certificate = keystore.getCertificate(alias);
         PublicKey publicKey = certificate.getPublicKey();
 
-
         return publicKey;
     }
 
+    /**
+     * unsigned byte(바이트) 배열을 16진수 문자열로 바꾼다.
+     *
+     * ByteUtils.toHexString(null) = null
+     * ByteUtils.toHexString([(byte)1, (byte)255]) = "01ff"
+     *
+     * @param bytes unsigned byte's array
+     * @return
+     */
+    public static String toHexString(byte[] bytes) {
+        if (bytes == null) { return null; }
 
-
-    private static Key getPrivateKey2() throws Exception {
-        String keystorePath = "c:/work/ttt.jks";
-        String keystorePwd = "test1234";
-        String alias = "ttt";
-        String keyPwd = "test1234";
-        FileInputStream is = new FileInputStream(keystorePath);
-//        키 저장소 유형: PKCS12
-        KeyStore keystore = KeyStore.getInstance("PKCS12");
-        keystore.load(is, keystorePwd.toCharArray());
-        Key key = keystore.getKey(alias, keyPwd.toCharArray());
-        return key;
+        StringBuffer result = new StringBuffer();
+        for (byte b : bytes) {
+            result.append(Integer.toString((b & 0xF0) >> 4, 16));
+            result.append(Integer.toString(b & 0x0F, 16));
+        }
+        return result.toString();
     }
-    private static Key getPublicKey2() throws Exception {
-        String keystorePath = "c:/work/ppp.jks";
-        String keystorePwd = "test1111";
-        String alias = "trustppp";
-        FileInputStream is = new FileInputStream(keystorePath);
-//        키 저장소 유형: PKCS12
-        KeyStore keystore = KeyStore.getInstance("PKCS12");
-        keystore.load(is, keystorePwd.toCharArray());
-        Certificate certificate = keystore.getCertificate(alias);
-        PublicKey publicKey = certificate.getPublicKey();
 
-
-        return publicKey;
+        /**
+     * 16진수 문자열을 바이트 배열로 변환한다.
+     * 문자열의 2자리가 하나의 byte로 바뀐다.
+     *
+     * ByteUtils.hexStringToBytes(null) = null
+     * ByteUtils.hexStringToBytes("0E1F4E") = [0x0e, 0xf4, 0x4e]
+     * ByteUtils.hexStringToBytes("48414e") = [0x48, 0x41, 0x4e]
+     *
+     * @param digits 16진수 문자열
+     * @return
+     * @throws NumberFormatException
+     */
+    public static byte[] hexStringToBytes(String digits) throws IllegalArgumentException, NumberFormatException {
+        if (digits == null) { return null; }
+        int length = digits.length();
+        if (length % 2 == 1) { throw new IllegalArgumentException("For input string: \"" + digits + "\""); }
+        length = length / 2;
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int index = i * 2;
+            bytes[i] = (byte) (Short.parseShort(digits.substring(index, index + 2), 16));
+        }
+        return bytes;
     }
 }
