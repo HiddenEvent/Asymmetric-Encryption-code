@@ -10,6 +10,11 @@ import java.security.cert.Certificate;
 
 public class KeyTest {
     private static final String keyFilePath = System.getProperty("user.dir") + "/src/keys/";
+    // 1 * 1000L (1초)
+    // 1 * 60 * 1000L (1분)
+    // 1 * 60 * 60 * 1000L (1시간)
+    // 1 * 24 * 60 * 60 * 1000L (하루)
+    private static Long validTime = 5 * 1000L; // 5초
     private static Cipher cipher = null;
 
     static {
@@ -25,10 +30,27 @@ public class KeyTest {
     public static void main(String[] args) throws Exception {
         // 고객사에서 보낼 데이터
         String text = "아이디";
-        String encryptHexString = encryption(text);
+        long publicServerMillis = System.currentTimeMillis() - 4 * 1000L;
+        String payload = publicServerMillis+"//"+text;
+        System.out.println(payload);
+        String encryptHexString = encryption(payload);
 
         // 우리쪽 서버에서 복호화 로그인 처리
         String decryption = decryption(encryptHexString);
+        System.out.println(decryption);
+        String[] payloads = decryption.split("//");
+        String userId = payloads[1];
+        long sendTimeMillis = Long.parseLong(payloads[0]);
+        boolean isNotExpire = expireCk(sendTimeMillis);
+        System.out.println(isNotExpire);
+
+    }
+
+    private static boolean expireCk(long sendTimeMillis) {
+        // 유효시간 계산 (5초)
+        long term = System.currentTimeMillis() - sendTimeMillis;
+        System.out.println(term);
+        return term >= 0 && validTime >= term;
     }
 
     private static String decryption(String encryptHexString) throws Exception {
